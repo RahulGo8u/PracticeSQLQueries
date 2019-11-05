@@ -99,3 +99,97 @@ SELECT * FROM WORKERCLONE
 SELECT * FROM WORKER
 EXCEPT
 SELECT * FROM WORKERCLONE
+
+--31 Write An SQL Query To Show The Current Date And Time.
+--CURRENT DATE
+SELECT CONVERT(DATE, GETDATE())
+
+--CURRENT TIME
+SELECT CONVERT(TIME, GETDATE())
+
+--32 Write An SQL Query To Show The Top N (Say 10) Records Of A Table.
+SELECT TOP 10 * FROM WORKER
+
+--33 Write An SQL Query To Determine The Nth (Say N=5) Highest Salary From A Table.
+WITH CTE AS 
+(SELECT TOP 5 SALARY FROM WORKER ORDER BY SALARY DESC) 
+SELECT TOP 1 SALARY FROM CTE ORDER BY SALARY
+
+--34 Write An SQL Query To Determine The 5th Highest Salary Without Using TOP Or Limit Method.
+SELECT SALARY
+FROM Worker W1
+WHERE 4= 
+(
+ SELECT COUNT( DISTINCT ( W2.Salary ) ) as CountSal
+ FROM Worker W2
+ WHERE W2.Salary >= W1.Salary
+ );
+
+ --35 Write An SQL Query To Fetch The List Of Employees With The Same Salary.
+SELECT W1.WORKER_ID, W1.FIRST_NAME, W1.SALARY
+FROM WORKER W1
+JOIN WORKER W2
+ON W1.SALARY=W2.SALARY
+AND W1.WORKER_ID<>W2.WORKER_ID
+
+ --36 Write An SQL Query To Show The Second Highest Salary From A Table.
+ SELECT MAX(SALARY) FROM WORKER
+ WHERE SALARY NOT IN
+ (
+ SELECT MAX(SALARY) FROM WORKER
+ )
+
+ --37 Write An SQL Query To Show One Row Twice In Results From A Table.
+select FIRST_NAME, DEPARTMENT from worker W where W.DEPARTMENT='HR' 
+union all 
+select FIRST_NAME, DEPARTMENT from Worker W1 where W1.DEPARTMENT='HR';
+
+--38 Write An SQL Query To Fetch Intersecting Records Of Two Tables.
+(SELECT * FROM Worker)
+INTERSECT
+(SELECT * FROM WorkerClone);
+
+--39 Write An SQL Query To Fetch The First 50% Records From A Table.
+SELECT TOP (SELECT COUNT(1) / 2 FROM WORKER) * FROM WORKER
+
+--40 Write An SQL Query To Fetch The Departments That Have Less Than Five People In It.
+SELECT DEPARTMENT, COUNT(WORKER_ID) FROM WORKER GROUP BY DEPARTMENT HAVING COUNT(WORKER_ID) <5
+
+--41 Write An SQL Query To Show All Departments Along With The Number Of People In There.
+SELECT DEPARTMENT, COUNT(WORKER_ID) FROM WORKER GROUP BY DEPARTMENT
+
+--42 Write An SQL Query To Show The Last Record From A Table.
+SELECT TOP 1 * FROM WORKER ORDER BY 1 DESC
+SELECT * FROM WORKER WHERE WORKER_ID= (SELECT MAX(WORKER_ID) FROM WORKER)
+
+--43 Write An SQL Query To Fetch The First Row Of A Table.
+SELECT TOP 1 * FROM WORKER ORDER BY 1
+SELECT * FROM WORKER WHERE WORKER_ID= (SELECT MIN(WORKER_ID) FROM WORKER)
+
+--44 Write An SQL Query To Fetch The Last Five Records From A Table.
+SELECT TOP 5 * FROM WORKER ORDER BY 1 DESC
+
+--45 Write An SQL Query To Print The Name Of Employees Having The Highest Salary In Each Department.
+SELECT W.DEPARTMENT, FIRST_NAME, SALARY FROM
+(
+SELECT DEPARTMENT, MAX(SALARY) HIGHESTSAL FROM WORKER GROUP BY DEPARTMENT
+)
+AS TEMPWORKER
+JOIN WORKER W
+ON W.DEPARTMENT = TEMPWORKER.DEPARTMENT
+AND W.SALARY =TEMPWORKER.HIGHESTSAL
+
+--46 Write An SQL Query To Fetch Three Max Salaries From A Table.
+SELECT DISTINCT TOP 3 (SALARY) FROM WORKER ORDER BY SALARY DESC
+
+--47 Write An SQL Query To Fetch Three Min Salaries From A Table.
+SELECT DISTINCT TOP 3 (SALARY) FROM WORKER ORDER BY SALARY
+
+--48 Write An SQL Query To Fetch Nth Max Salaries From A Table.
+SELECT DISTINCT TOP 3 (SALARY) FROM WORKER ORDER BY SALARY DESC
+
+--49 Write An SQL Query To Fetch Departments Along With The Total Salaries Paid For Each Of Them.
+SELECT DEPARTMENT, SUM(SALARY) TOTALSALARIES FROM WORKER GROUP BY DEPARTMENT
+
+--50 Write An SQL Query To Fetch The Names Of Workers Who Earn The Highest Salary.
+SELECT FIRST_NAME FROM WORKER WHERE SALARY = (SELECT MAX(SALARY) FROM WORKER)
